@@ -94,6 +94,9 @@
              * Called when a dependency needs to be loaded.
              */
             load: function (name, req, onLoad, config) {
+
+            	console.log(arguments);
+
                 config = config || {};
 
                 if (config.locale) {
@@ -144,7 +147,7 @@
                     }
 
                     req(toLoad, function () {
-                        onLoad();
+                        onLoad(function() {});
                     });
                 } else {
                     //First, fetch the master bundle, it knows what locales are available.
@@ -174,7 +177,15 @@
                             }
 
                             //All done, notify the loader.
-                            onLoad(value);
+                            //onLoad(value);
+                            onLoad(function(prop) {
+                            	if( value.hasOwnProperty(prop) )
+                            		return value[prop];
+                            	else if(typeof prop === 'undefined')
+                            		return value;
+                            	else
+                            		return prop;
+                            });
                         });
                     });
                 }
